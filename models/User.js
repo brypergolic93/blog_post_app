@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+var uniqueValidator = require('mongoose-unique-validator')
+
 const bcrypt = require('bcrypt')
 
 const UserSchema = new Schema({
@@ -10,9 +12,11 @@ const UserSchema = new Schema({
     },
     password: { 
         type: String,
-        required: true
+        required: true,
     }
 });
+// The following makes sure duplicate usernames can not be registered
+UserSchema.plugin(uniqueValidator);
 
 // Before saving any record, execute the function passed into the 2nd argument
 // That way, we can change the data before saving to the database

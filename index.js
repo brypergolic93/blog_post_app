@@ -2,30 +2,21 @@ const express = require('express');
 const expressSession = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// add the 'files' property to the req object so that we can access the uploaded files using req.files
-const fileUpload = require('express-fileupload');
-
-
+const fileUpload = require('express-fileupload'); // add the 'files' property to the req object so that we can access the uploaded files using req.files
+const flash = require('connect-flash'); // store messages associated with a session - allows error messages to be cleared
+const ejs = require('ejs'); // ejs allows us to use a template across multiple html files rather than editing all of them whenever a change is needed
+const {Z_FILTERED } = require('zlib')
 
 // connect to database
 mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: true});
 
-
-
 const app = new express()
 // enable secure hyper text transfer protocol
-const fs = require('fs')
 const http = require('http')
-//const https = require('https');
-//const privateKey = fs.readFileSync('./key.pem');
-//const certificate = fs.readFileSync('./cert.pem');
-//const credentials = {key: privateKey, cert: certificate};
 const httpServer = http.createServer(app);
 httpServer.listen(4000, () => { console.log('Listening on 4000.') });
 
-// ejs allows us to use a template across multiple html files rather than editing all of them whenever a change is needed
-const ejs = require('ejs')
-const {Z_FILTERED } = require('zlib')
+
 // any file ending in .ejs should be rendered with ejs package, which looks in the 'views' folder for the template
 app.set('view engine','ejs')
 app.use(express.static('public'))
@@ -33,10 +24,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(fileUpload())
 
-/*
-app.listen(4000,() => {
-    console.log('App listening on port 4000!')
-})*/
+
 
 const validateMiddleWare = require('./middleware/validationMiddleWare'); //Create middleware that makes sure form entry is valid
 app.use('/posts/store',validateMiddleWare) // use validateMiddleWare only when new posts are created (only execute if express sees a request from /posts/url)
@@ -44,14 +32,13 @@ app.use('/posts/store',validateMiddleWare) // use validateMiddleWare only when n
 app.use(expressSession({
     secret:'keyboard cat' // pass middleware in a config object assigned to 'secret', which signs and encrypts the Session ID session
 }))
-
+app.use(flash()); // connect-flash package
 // Each time the app is refreshed, this middleware will show that it's been called
 const requestMade = (req,res,next) => {
     console.log('App request has been made.')
     next()
 }
 app.use(requestMade)
-
 
 // all ejs files will have access to null
 global.loggedIn = null;
@@ -61,6 +48,7 @@ app.use("*", (req,res,next) => {
     loggedIn = req.session.userId;
     next()
 });
+
 
 const homeController = require('./controllers/home')
 const aboutController = require('./controllers/about')
