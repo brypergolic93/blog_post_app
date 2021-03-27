@@ -5,7 +5,7 @@ const User = require('../models/User')
 
 module.exports = (req,res) => {
     const{username,password} = req.body; // extract the username and password from the entry form
-    
+    console.log(username)
     var errorArray = []
     if(username == '') {
         // create an error when username is blank
