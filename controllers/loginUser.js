@@ -23,7 +23,7 @@ module.exports = (req,res) => {
 
     User.findOne({username:username},(error,user) => { // try to find one user with the entered username. Is successful, proceed with password auth.
         if (user) {
-            
+
             // user bcrypt to compare the hashed user password from the database (safe from hackers using the 'timing' attack)
             bcrypt.compare(password, user.password, (error,same) => {
                 if(same) {
@@ -32,12 +32,15 @@ module.exports = (req,res) => {
                     res.redirect('/')
                 }
                 else {
-                    res.redirect('/auth/login')
+                    var passwordFlag = 'test'
+                    req.session.passwordFlag = passwordFlag
+                    return res.redirect('/auth/login')
                 }
             })
         }
         else {
             res.redirect('/auth/login')
         }
+        
     })
 }

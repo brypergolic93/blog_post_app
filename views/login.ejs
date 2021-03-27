@@ -8,7 +8,7 @@
   <%-include('layouts/navbar');-%>
 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('/img/contact-bg.jpg')">
+  <header class="masthead" style="background-image: url('/img/login-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -31,6 +31,12 @@
             <% for(var i=0;i<errors.length;i++) { %>
               <li class="list-group-item list-group-item-danger"><span>Please enter a valid </span><%=errors[i]%><span>.</span></li>
             <% } %>
+          </ul>
+        <% } %>
+        <!-- Inform user if password is incorrect-->
+        <% if(passwordIncorrect=='test') { %>
+          <ul class="list-group"></ul>
+            <li class="list-group-item list-group-item-danger"><span>Incorrect password was entered.</span></li>
           </ul>
         <% } %>
         <!-- the enctype allows multimedia in the form such as a photo-->

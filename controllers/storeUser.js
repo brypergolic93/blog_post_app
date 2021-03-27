@@ -5,7 +5,7 @@ const { stream } = require('browser-sync')
 
 module.exports = (req,res) => {
     User.create(req.body, (error) => {
-        console.log('test')
+        
         if(error) {
             // each error that exists when user storage is attempted gets its message property accessed
             const validationErrors = Object.keys(error.errors).map(key => error.errors[key].message)

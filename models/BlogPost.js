@@ -4,7 +4,13 @@ const Schema = mongoose.Schema;
 const BlogPostSchema = new Schema({
     title: String,
     body: String,
-    username: String,
+    // username: String,
+    // the user id is associated with an object in the User collection with the same 'object id'
+    userid: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     datePosted:{/* declare property type with an object because we need a default*/    
         type: Date,
         default: new Date()
